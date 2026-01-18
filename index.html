@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+	<head>
+		<meta charset="utf-8">
+		<title>kanban-board</title>
+		<link rel="stylesheet" href="css/style.css" />
+	</head>
+	<body>
+		<div class="title">
+			<h1>Kanban Board</h1>
+		</div>
+		<div class="input">
+			<input placeholder="输入任务内容" type="text" id="input-item"/>
+			<button id="add-btn">添加</button>
+		</div>
+		<div class="board">
+			<div class="column" data-status="todo">
+				<h3>待办中</h3>
+				<!-- 任务放置处 -->
+				<div class="tasks"></div>
+			</div>
+			<div class="column" data-status="doing">
+				<h3>进行中</h3>
+				<div class="tasks"></div>
+			</div>
+			<div class="column" data-status="done">
+				<h3>已完成</h3>
+				<div class="tasks"></div>
+			</div>
+		</div>
+	</body>
+	<script src="js/index.js"></script>
+</html>

@@ -1,0 +1,27 @@
+.title {
+	width: 100%;
+	text-align: center;
+}
+
+.input {
+	text-align: center;
+	margin-bottom: 10px;
+}
+
+input {
+	padding: 4px;
+}
+
+.board {
+	display: flex;
+	justify-content: center;
+}
+
+.column {
+	margin: 0 20px;
+	background-color: #f5f5f5;
+	padding: 10px;
+}
+.tasks {
+	min-height: 40px;
+}

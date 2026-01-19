@@ -129,14 +129,38 @@ const startEditing = (span, item) => {
 }
 /** 
  * 允许放入
- * @event { object } --事件对象
+ * @param { DragEvent } e --事件对象
  */
 const allowDrop = (e) => {
 	e.preventDefault();
 }
+/**
+ * 拖拽放置方法
+ * @param { Event } e  --事件对象
+ * @param { string } status -目标状态
+ */
+const createDrop = (e, status) => {
+	e.preventDefault();
+	const id = e.dataTransfer.getData('text/plain');
+	move(id, status);
 
+	saveToStorage();
+	render();
+}
 
-todo.addEventListener('click', (e) => {
+document.addEventListener('dblclick', (e) => {
+	if (e.target.matches('span')) {
+		const task = e.target.closest('.task');
+		if (!task) return;
+		const span = e.target;
+		const id = task.dataset.id;
+
+		const item = list.find(item => item.id === id);
+		if (!item) return;
+		startEditing(span, item)
+	}
+});
+document.addEventListener('click', (e) => {
 	if (e.target.textContent === 'x') {
 		const task = e.target.closest('.task');
 		const id = task.dataset.id;
@@ -144,91 +168,18 @@ todo.addEventListener('click', (e) => {
 		saveToStorage();
 		render();
 	}
-});
-todo.addEventListener('dblclick', (e) => {
-	if (e.target.matches('span')) {
-		const task = e.target.closest('.task');
-		if (!task) return;
-		const span = e.target;
-		const id = task.dataset.id;
-		
-		const item = list.find(item => item.id === id);
-		if (!item) return;
-		startEditing(span, item);
-	}
-});
+})
+
 todo.addEventListener('dragover', allowDrop);
-todo.addEventListener('drop', (e) => {
-	e.preventDefault();
-	const id = e.dataTransfer.getData('text/plain');
-	move(id, 'todo');
-	
-	saveToStorage();
-	render();
-});
+todo.addEventListener('drop', (e) => createDrop(e, 'todo'));
 
 
-doing.addEventListener('click', (e) => {
-	if (e.target.textContent === 'x') {
-		const task = e.target.closest('.task');
-		const id = task.dataset.id;
-		list = list.filter(t => t.id !== id);
-		saveToStorage();
-		render();
-	}
-});
-doing.addEventListener('dblclick', (e) => {
-	if (e.target.matches('span')) {
-		const task = e.target.closest('.task');
-		if (!task) return;
-		const span = e.target;
-		const id = task.dataset.id;
-
-		const item = list.find(item => item.id === id);
-		if (!item) return;
-		startEditing(span, item);
-	}
-});
 doing.addEventListener('dragover', allowDrop);
-doing.addEventListener('drop', (e) => {
-	e.preventDefault();
-	const id = e.dataTransfer.getData('text/plain');
-	move(id, 'doing');
-	
-	saveToStorage();
-	render();
-});
+doing.addEventListener('drop', (e) => createDrop(e, 'doing'));
 
-done.addEventListener('click', (e) => {
-	if (e.target.textContent === 'x') {
-		const task = e.target.closest('.task');
-		const id = task.dataset.id;
-		list = list.filter(t => t.id !== id);
-		saveToStorage();
-		render();
-	}
-});
-done.addEventListener('dblclick', (e) => {
-	if (e.target.matches('span')) {
-		const task = e.target.closest('.task');
-		if (!task) return;
-		const span = e.target;
-		const id = task.dataset.id;
-		
-		const item = list.find(item => item.id === id);
-		if (!item) return;
-		startEditing(span, item);
-	}
-});
+
 done.addEventListener('dragover', allowDrop);
-done.addEventListener('drop', (e) => {
-	e.preventDefault();
-	const id = e.dataTransfer.getData('text/plain');
-	move(id, 'done');
-	
-	saveToStorage();
-	render();
-});
+done.addEventListener('drop', (e) => createDrop(e, 'done'));
 
 input.addEventListener('keydown', (e) => {
 	if (e.key === 'Enter') {

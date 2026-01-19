@@ -49,6 +49,7 @@ const render = () => {
 		div.addEventListener('dragstart', (e) => {
 			e.dataTransfer.setData('text/plain', item.id);
 		});
+		div.addEventListener('dragend', delDragOver);
 
 		const span = document.createElement('span');
 		span.style.display = 'block';
@@ -148,6 +149,22 @@ const createDrop = (e, status) => {
 	render();
 }
 
+const isDragOver = (e) => {
+	const column = e.currentTarget.closest('.column');
+	column.classList.add('is-drag-over');
+}
+
+const removeDragOver = (e) => {
+	const column = e.currentTarget.closest('.column');
+	column.classList.remove('is-drag-over');
+}
+
+const delDragOver = () => {
+	document.querySelectorAll('.is-drag-over').forEach(col => {
+		col.classList.remove('is-drag-over');
+	});
+}
+
 document.addEventListener('dblclick', (e) => {
 	if (e.target.matches('span')) {
 		const task = e.target.closest('.task');
@@ -161,25 +178,29 @@ document.addEventListener('dblclick', (e) => {
 	}
 });
 document.addEventListener('click', (e) => {
-	if (e.target.textContent === 'x') {
+	if (e.target.matches('.task button') && e.target.textContent === 'x') {
 		const task = e.target.closest('.task');
 		const id = task.dataset.id;
 		list = list.filter(t => t.id !== id);
 		saveToStorage();
 		render();
 	}
-})
+});
 
 todo.addEventListener('dragover', allowDrop);
 todo.addEventListener('drop', (e) => createDrop(e, 'todo'));
-
+todo.addEventListener('dragenter', isDragOver);
+todo.addEventListener('dragleave', removeDragOver);
 
 doing.addEventListener('dragover', allowDrop);
 doing.addEventListener('drop', (e) => createDrop(e, 'doing'));
-
+doing.addEventListener('dragenter', isDragOver);
+doing.addEventListener('dragleave', removeDragOver);
 
 done.addEventListener('dragover', allowDrop);
 done.addEventListener('drop', (e) => createDrop(e, 'done'));
+done.addEventListener('dragenter', isDragOver);
+done.addEventListener('dragleave', removeDragOver);
 
 input.addEventListener('keydown', (e) => {
 	if (e.key === 'Enter') {
